@@ -64,6 +64,27 @@ function setErr(el, msg) {
   box.querySelector('.err').textContent = msg || ''
 }
 
+function showTyping(el, label = 'Assistant is typing') {
+  el.classList.add('typing')
+  el.setAttribute('role', 'status')
+  el.setAttribute('aria-label', label)
+  el.replaceChildren()
+
+  if (label !== 'Assistant is typing') el.append(document.createTextNode(`${label} `))
+  const dots = document.createElement('span')
+  dots.className = 'typing-dots'
+  dots.setAttribute('aria-hidden', 'true')
+  for (let i = 0; i < 3; i++) dots.append(document.createElement('span'))
+  el.append(dots)
+}
+
+function showText(el, text) {
+  el.classList.remove('typing')
+  el.removeAttribute('role')
+  el.removeAttribute('aria-label')
+  el.textContent = text
+}
+
 const hasBengaliCharacters = /[\u0980-\u09FF]/
 const bengaliCharacters = /[\u0980-\u09FF]/g
 const englishOnlyMessage = 'Please enter this information in English.'
@@ -192,7 +213,7 @@ form.addEventListener('submit', async (e) => {
 async function showWelcome(row) {
   const box = $('welcome')
   box.hidden = false
-  box.textContent = 'Preparing your confirmation message...'
+  showTyping(box, 'Preparing your confirmation message')
   try {
     const r = await fetch('/api/welcome', {
       method: 'POST',
@@ -201,7 +222,7 @@ async function showWelcome(row) {
     })
     const d = await r.json()
     if (!r.ok || !d.message) throw new Error('no message')
-    box.textContent = d.message
+    showText(box, d.message)
   } catch {
     box.hidden = true
   }
@@ -241,7 +262,8 @@ $('chat-form').addEventListener('submit', async (e) => {
   input.value = ''
   addMsg('me', text)
   history.push({ role: 'user', text })
-  const wait = addMsg('bot', '...')
+  const wait = addMsg('bot', '')
+  showTyping(wait)
   try {
     const r = await fetch('/api/chat', {
       method: 'POST',
@@ -250,10 +272,10 @@ $('chat-form').addEventListener('submit', async (e) => {
     })
     const d = await r.json()
     if (!r.ok) throw new Error(d.error || 'error')
-    wait.textContent = d.reply
+    showText(wait, d.reply)
     history.push({ role: 'assistant', text: d.reply })
   } catch {
-    wait.textContent = 'Sorry, the assistant is not available right now. Please message our Facebook page.'
+    showText(wait, 'Sorry, the assistant is not available right now. Please message our Facebook page.')
     history.pop()
   }
   logEl.scrollTop = logEl.scrollHeight
