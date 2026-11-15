@@ -30,3 +30,13 @@ git push -u origin main
 4. লিংকটি Facebook পেজে বসান
 
 জমা হওয়া তথ্য: Supabase > Table Editor > admissions
+
+## Gemini (চ্যাট + স্বাগত বার্তা)
+1. aistudio.google.com/apikey থেকে API key নিন
+2. `.env` ফাইলে `GEMINI_API_KEY=` এর পরে বসান
+3. Vercel এ Environment Variables এ `GEMINI_API_KEY` ও `GEMINI_MODEL` যোগ করুন (VITE_ লিখবেন না)
+4. ফি, সময়, ফোন নম্বর দিতে চাইলে `api/_knowledge.js` ফাইলে লিখুন
+
+## Supabase pause বন্ধ করা
+1. Supabase SQL Editor এ `keep-alive.sql` Run করুন
+2. GitHub এ push করুন, Vercel প্রতিদিন নিজে থেকে Supabase কে ডাক দেবে

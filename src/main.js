@@ -1,4 +1,4 @@
-import { createClient } from '@supabase/supabase-js'
+﻿import { createClient } from '@supabase/supabase-js'
 import './style.css'
 
 const supabase = createClient(
@@ -69,7 +69,7 @@ const bengaliCharacters = /[\u0980-\u09FF]/g
 const englishOnlyMessage = 'Please enter this information in English.'
 
 document.querySelectorAll('input[type=text], input[type=tel]').forEach((input) => {
-  if (input.id === 'website') return
+  if (input.id === 'website' || input.id === 'chat-input') return
   input.addEventListener('input', () => {
     if (hasBengaliCharacters.test(input.value)) {
       input.value = input.value.replace(bengaliCharacters, '')
@@ -184,5 +184,77 @@ form.addEventListener('submit', async (e) => {
     $('age-hint').textContent = ''
     statusEl.textContent = 'Thank you! Your form has been submitted.'
     statusEl.className = 'ok'
+    showWelcome(row)
   }
+})
+
+// ---------- Gemini: welcome message ----------
+async function showWelcome(row) {
+  const box = $('welcome')
+  box.hidden = false
+  box.textContent = 'Preparing your confirmation message...'
+  try {
+    const r = await fetch('/api/welcome', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name: row.full_name, className: row.current_class, modes: row.class_mode }),
+    })
+    const d = await r.json()
+    if (!r.ok || !d.message) throw new Error('no message')
+    box.textContent = d.message
+  } catch {
+    box.hidden = true
+  }
+}
+
+// ---------- Gemini: chat ----------
+const chatEl = $('chat')
+const logEl = $('chat-log')
+const history = []
+
+function addMsg(who, text) {
+  const d = document.createElement('div')
+  d.className = `msg ${who}`
+  d.textContent = text
+  logEl.appendChild(d)
+  logEl.scrollTop = logEl.scrollHeight
+  return d
+}
+
+function toggleChat(open) {
+  chatEl.hidden = !open
+  $('chat-toggle').hidden = open
+  $('chat-toggle').setAttribute('aria-expanded', String(open))
+  if (open) {
+    if (!logEl.children.length) addMsg('bot', 'Hi! Ask me about admission, classes or how to fill this form.')
+    $('chat-input').focus()
+  }
+}
+$('chat-toggle').addEventListener('click', () => toggleChat(true))
+$('chat-close').addEventListener('click', () => toggleChat(false))
+
+$('chat-form').addEventListener('submit', async (e) => {
+  e.preventDefault()
+  const input = $('chat-input')
+  const text = input.value.trim()
+  if (!text) return
+  input.value = ''
+  addMsg('me', text)
+  history.push({ role: 'user', text })
+  const wait = addMsg('bot', '...')
+  try {
+    const r = await fetch('/api/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ messages: history }),
+    })
+    const d = await r.json()
+    if (!r.ok) throw new Error(d.error || 'error')
+    wait.textContent = d.reply
+    history.push({ role: 'assistant', text: d.reply })
+  } catch {
+    wait.textContent = 'Sorry, the assistant is not available right now. Please message our Facebook page.'
+    history.pop()
+  }
+  logEl.scrollTop = logEl.scrollHeight
 })
