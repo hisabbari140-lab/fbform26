@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Abacus Expert Birganj | Admission Form</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <main class="sheet">
+    <header class="head">
+      <h1>Abacus Expert Birganj</h1>
+      <p>Fill in the student's details. We will contact you on WhatsApp.</p>
+      <a id="fb" class="fb" href="#" target="_blank" rel="noopener" hidden>Visit our Facebook page</a>
+    </header>
+
+    <form id="form" novalidate>
+      <div class="field">
+        <label for="full_name">Student's Full Name</label>
+        <input id="full_name" name="full_name" type="text" autocomplete="off" required />
+        <small class="err"></small>
+      </div>
+
+      <div class="field">
+        <label for="dob">Date of Birth <span>Age must be 4 to 13 years</span></label>
+        <div class="dob-fields" id="dob">
+          <div>
+            <label for="dob_day">Day</label>
+            <select id="dob_day" name="dob_day" required>
+              <option value="">DD</option>
+            </select>
+          </div>
+          <div>
+            <label for="dob_month">Month</label>
+            <select id="dob_month" name="dob_month" required>
+              <option value="">MM</option>
+              <option value="1">January</option>
+              <option value="2">February</option>
+              <option value="3">March</option>
+              <option value="4">April</option>
+              <option value="5">May</option>
+              <option value="6">June</option>
+              <option value="7">July</option>
+              <option value="8">August</option>
+              <option value="9">September</option>
+              <option value="10">October</option>
+              <option value="11">November</option>
+              <option value="12">December</option>
+            </select>
+          </div>
+          <div>
+            <label for="dob_year">Year</label>
+            <select id="dob_year" name="dob_year" required>
+              <option value="">YYYY</option>
+            </select>
+          </div>
+        </div>
+        <small class="hint" id="age-hint"></small>
+        <small class="err"></small>
+      </div>
+
+      <fieldset class="field" id="gender">
+        <legend>Gender</legend>
+        <div class="checks">
+          <label class="check"><input type="checkbox" name="gender" value="Male" /> Male</label>
+          <label class="check"><input type="checkbox" name="gender" value="Female" /> Female</label>
+        </div>
+        <small class="err"></small>
+      </fieldset>
+
+      <div class="field">
+        <label for="current_class">Current Class</label>
+        <select id="current_class" name="current_class" required>
+          <option value="">-- Select --</option>
+          <option>Play</option>
+          <option>Nursery</option>
+          <option>KG</option>
+          <option>Class One</option>
+          <option>Class Two</option>
+          <option>Class Three</option>
+          <option>Class Four</option>
+          <option>Class Five</option>
+          <option>Class Six</option>
+          <option>Class Seven</option>
+        </select>
+        <small class="err"></small>
+      </div>
+
+      <div class="field">
+        <label for="school_name">School Name</label>
+        <input id="school_name" name="school_name" type="text" required />
+        <small class="err"></small>
+      </div>
+
+      <div class="row">
+        <div class="field">
+          <label for="father_name">Father's Name</label>
+          <input id="father_name" name="father_name" type="text" required />
+          <small class="err"></small>
+        </div>
+        <div class="field">
+          <label for="mother_name">Mother's Name</label>
+          <input id="mother_name" name="mother_name" type="text" required />
+          <small class="err"></small>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="whatsapp">WhatsApp Number</label>
+        <input id="whatsapp" name="whatsapp" type="tel" inputmode="numeric" placeholder="01XXXXXXXXX" required />
+        <small class="err"></small>
+      </div>
+
+      <fieldset class="field" id="address">
+        <legend>Current Address</legend>
+        <div class="row">
+          <div class="sub">
+            <label for="village">Village / Mohollah</label>
+            <input id="village" type="text" />
+          </div>
+          <div class="sub">
+            <label for="post">Post Office</label>
+            <input id="post" type="text" />
+          </div>
+          <div class="sub">
+            <label for="upazila">Upazila</label>
+            <input id="upazila" type="text" />
+          </div>
+          <div class="sub">
+            <label for="district">District</label>
+            <input id="district" type="text" />
+          </div>
+        </div>
+        <small class="err"></small>
+      </fieldset>
+
+      <fieldset class="field" id="class_mode">
+        <legend>Class Mode</legend>
+        <div class="checks">
+          <label class="check"><input type="checkbox" name="class_mode" value="Offline" /> Offline</label>
+          <label class="check"><input type="checkbox" name="class_mode" value="Online" /> Online</label>
+        </div>
+        <small class="err"></small>
+      </fieldset>
+
+      <input type="text" name="website" id="website" tabindex="-1" autocomplete="off" aria-hidden="true" class="trap" />
+
+      <button id="submit" type="submit">Submit form</button>
+      <p id="status" role="status"></p>
+    </form>
+  </main>
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>
