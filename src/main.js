@@ -85,6 +85,26 @@ function showText(el, text) {
   el.textContent = text
 }
 
+function showReply(el, text, linkUrl) {
+  el.classList.remove('typing')
+  el.removeAttribute('role')
+  el.removeAttribute('aria-label')
+  el.replaceChildren()
+
+  const parts = linkUrl ? text.split(linkUrl) : [text]
+  parts.forEach((part, index) => {
+    el.append(document.createTextNode(part))
+    if (index < parts.length - 1) {
+      const link = document.createElement('a')
+      link.href = linkUrl
+      link.target = '_blank'
+      link.rel = 'noopener noreferrer'
+      link.textContent = linkUrl
+      el.append(link)
+    }
+  })
+}
+
 const hasBengaliCharacters = /[\u0980-\u09FF]/
 const bengaliCharacters = /[\u0980-\u09FF]/g
 const englishOnlyMessage = 'Please enter this information in English.'
@@ -272,7 +292,7 @@ $('chat-form').addEventListener('submit', async (e) => {
     })
     const d = await r.json()
     if (!r.ok) throw new Error(d.error || 'error')
-    showText(wait, d.reply)
+    showReply(wait, d.reply, d.facebook)
     history.push({ role: 'assistant', text: d.reply })
   } catch {
     showText(wait, 'Sorry, the assistant is not available right now. Please message our Facebook page.')
